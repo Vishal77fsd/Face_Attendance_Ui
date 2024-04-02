@@ -17,7 +17,7 @@ const Attendance = () => {
 
   function temp() {
     let res = [];
-    for (let i = 1; i <= days; i++) {
+    for (let i = 0; i <= days; i++) {
       res.push(
         <div key={i} className="p-4 border flex-none w-32">
           {i}/{new Date().getMonth() + 1}/{new Date().getFullYear()}
@@ -29,9 +29,8 @@ const Attendance = () => {
 
   function getAttendanceOfEmployee(employeeAttendance) {
     let res = [];
-    console.log(employeeAttendance);
 
-    for (let i = 1; i <= days; i++) {
+    for (let i = 0; i <= days; i++) {
       const date = `${i}/${
         new Date().getMonth() + 1
       }/${new Date().getFullYear()}`;
@@ -43,7 +42,7 @@ const Attendance = () => {
         res.push(
           <div
             key={i}
-            className="p-1 border flex-none h-16 w-32 flex  flex-col  justify-center items-center rounded-md"
+            className="p-1 border flex-none h-16 w-32 flex flex-col justify-center items-center rounded-md "
           >
             Nahi Aya
           </div>
@@ -104,19 +103,23 @@ const Attendance = () => {
     <>
       {isLoading && <Loading />}
       <div className={`${isLoading && "blur-sm"}`}>
-        <div className="w-fit p-4">
+        <div className="w-fit overflow-hidden rounded-md">
           <div className="flex bg-[#606060] text-black ">
-            <div className="p-4 z-20 border flex-none w-32 ">Name</div>
+            <div className="p-4 z-20 border flex-none w-32 fixed bg-red-500">
+              Name
+            </div>
             {temp()}
           </div>
-          {employees.map((employee, index) => (
-            <div key={index} className="flex items-center">
-              <div className="p-4 z-20 border flex-none h-16 w-32 bg-[#465fc1]">
-                {employee.firstname}
+          <div className="bg-blue-800">
+            {employees.map((employee, index) => (
+              <div key={index} className="flex items-center overflow-hidden">
+                <div className="p-4 z-20 flex-none h-16 w-32 bg-[#465fc1] fixed">
+                  {employee.firstname}
+                </div>
+                {getAttendanceOfEmployee(employee.attendance)}
               </div>
-              {getAttendanceOfEmployee(employee.attendance)}
-            </div>
-          ))}
+            ))}
+          </div>
         </div>
       </div>
     </>

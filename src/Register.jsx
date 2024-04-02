@@ -19,11 +19,13 @@ const Register = () => {
           // Camera is not blocked
           console.log("Camera access granted");
           setCameraBlocked(false);
+          setIsLoading(false);
         })
         .catch((error) => {
           // Camera is blocked
           console.error("Camera access denied", error);
           setCameraBlocked(true);
+          setIsLoading(false);
         });
     } else {
       console.error("getUserMedia is not supported by this browser");
@@ -36,6 +38,7 @@ const Register = () => {
     if (empName === "") {
       console.log("Please Enter Your Name");
       setIsFieldEmpty(true);
+      setIsLoading(false);
       setTimeout(() => {
         setIsFieldEmpty(false);
         setCameraBlocked(false);

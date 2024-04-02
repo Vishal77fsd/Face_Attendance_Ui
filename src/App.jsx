@@ -9,7 +9,7 @@ const App = () => {
   const [label, setLabel] = useState("");
   const [isClicked, setIsClicked] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-
+  const [response, setResponse] = useState(null);
   const webcamRef = useRef(null);
 
   const capture = useCallback(() => {
@@ -51,16 +51,24 @@ const App = () => {
         setIsLoading(true);
         // console.log("Employee " + response.data._label + " Added Successfully");
         setLabel(response.data._label);
+        setResponse(response.data);
         setTimeout(() => {
           setShowNotification(false);
           setLabel("");
           setIsClicked(false);
           setIsLoading(false);
+          setResponse(null);
         }, 2000);
       })
       .catch((err) => {
         console.log(err);
         setIsLoading(false);
+        setIsClicked(false);
+        setResponse(err);
+
+        setTimeout(() => {
+          setResponse(null);
+        }, 2000);
       });
   }, [webcamRef]);
 
@@ -75,9 +83,7 @@ const App = () => {
       {isLoading && <Loading />}
 
       <div className="h-[100vh]">
-        {showNotification && (
-          <Notification title={`Employee ${label} Checked In Successfully.`} />
-        )}
+        {response?.length > 0 && <Notification title={response} />}
         <div
           className={`flex flex-col justify-center items-center ${
             isLoading && `blur-md`
