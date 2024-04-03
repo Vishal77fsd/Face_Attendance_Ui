@@ -34,11 +34,11 @@ const Employees = () => {
   const handleDelete = (id) => {
     console.log(id);
     axios
-      .post(`http://localhost:3000/employees/delete/${id}`)
+      .post(`${import.meta.env.VITE_APP_BASE}/employees/delete/${id}`)
       .then((res) => {
         console.log(res);
         axios
-          .get("http://localhost:3000/employees")
+          .get(`${import.meta.env.VITE_APP_BASE}/employees`)
           .then((result) => {
             console.log(result.data);
             setEmployees(result.data);
@@ -83,7 +83,7 @@ const Employees = () => {
                         {employee.lastname}
                       </h3>
                       <img
-                        src={`http://www.localhost:3000/${employee.img}`}
+                        src={`${import.meta.env.VITE_APP_BASE}/${employee.img}`}
                         alt="profile photo"
                       />
 
