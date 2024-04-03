@@ -50,7 +50,9 @@ const EditEmployee = () => {
       lastName,
     };
     axios
-      .put(`http://localhost:3000/employee/update/${user._id}`, { data })
+      .put(`${import.meta.env.VITE_APP_BASE}/employee/update/${user._id}`, {
+        data,
+      })
       .then((res) => console.log(res.data))
       .catch((err) => console.log(err));
   }
@@ -68,7 +70,7 @@ const EditEmployee = () => {
           {user !== undefined && (
             <div className="w-[50%] m-auto relative">
               <img
-                src={`http://www.localhost:3000/uploads/${
+                src={`${import.meta.env.VITE_APP_BASE}/uploads/${
                   user.img.split("\\")[1]
                 }`}
                 alt="profile photo"

@@ -44,7 +44,7 @@ const App = () => {
     setIsLoading(true);
     const imageSrc = webcamRef.current.getScreenshot();
     axios
-      .post("http://localhost:3000/checkout", {
+      .post(`${import.meta.env.VITE_APP_BASE}/checkout`, {
         imageSrc,
       })
       .then((response) => {
