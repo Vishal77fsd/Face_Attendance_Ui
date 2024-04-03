@@ -3,6 +3,7 @@ import { useCallback, useRef, useState } from "react";
 import Webcam from "react-webcam";
 import Notification from "./Notification/Notification";
 import Loading from "./Notification/Loading";
+import { Navigate, useNavigate } from "react-router-dom";
 
 const App = () => {
   const [showNotification, setShowNotification] = useState(false);
@@ -18,7 +19,7 @@ const App = () => {
     const imageSrc = webcamRef.current.getScreenshot();
 
     axios
-      .post("http://localhost:3000/checkin", {
+      .post(`${import.meta.env.VITE_APP_BASE}/checkin`, {
         imageSrc,
       })
       .then((response) => {
@@ -80,34 +81,41 @@ const App = () => {
 
   return (
     <>
-      {isLoading && <Loading />}
+      {localStorage.getItem("admin") !== "null" &&
+        localStorage.getItem("admin") !== "undefined" && (
+          <Navigate to="/login" />
+        )}
 
-      <div className="h-[100vh]">
-        {response?.length > 0 && <Notification title={response} />}
-        <div
-          className={`flex flex-col justify-center items-center ${
-            isLoading && `blur-md`
-          }`}
-        >
-          <div>
-            <Webcam
-              audio={false}
-              height={720}
-              ref={webcamRef}
-              screenshotFormat="image/jpeg"
-              width={720}
-              videoConstraints={videoConstraints}
-              className="rounded-md"
-            />
-          </div>
-          <div className="flex gap-10 m-8">
-            <button disabled={isClicked} onClick={capture} className="">
-              Check In
-            </button>
+      <div>
+        {isLoading && <Loading />}
 
-            <button disabled={isClicked} onClick={checkout} className="">
-              Check Out
-            </button>
+        <div className="h-[100vh]">
+          {response?.length > 0 && <Notification title={response} />}
+          <div
+            className={`flex flex-col justify-center items-center ${
+              isLoading && `blur-md`
+            }`}
+          >
+            <div>
+              <Webcam
+                audio={false}
+                height={720}
+                ref={webcamRef}
+                screenshotFormat="image/jpeg"
+                width={720}
+                videoConstraints={videoConstraints}
+                className="rounded-md"
+              />
+            </div>
+            <div className="flex gap-10 m-8">
+              <button disabled={isClicked} onClick={capture} className="">
+                Check In
+              </button>
+
+              <button disabled={isClicked} onClick={checkout} className="">
+                Check Out
+              </button>
+            </div>
           </div>
         </div>
       </div>

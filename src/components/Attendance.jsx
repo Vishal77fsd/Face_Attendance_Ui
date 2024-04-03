@@ -2,6 +2,7 @@ import axios from "axios";
 import { useEffect, useState } from "react";
 import { SlArrowLeftCircle, SlArrowRightCircle } from "react-icons/sl";
 import Loading from "../Notification/Loading";
+import { Navigate, useNavigate } from "react-router-dom";
 
 const Attendance = () => {
   const [employees, setEmployees] = useState([]);
@@ -87,7 +88,7 @@ const Attendance = () => {
 
   useEffect(() => {
     axios
-      .get("http://localhost:3000/employees")
+      .get(`${import.meta.env.VITE_APP_BASE}/employees`)
       .then((result) => {
         setIsLoading(true);
         console.log(result.data);
@@ -101,6 +102,10 @@ const Attendance = () => {
 
   return (
     <>
+      {localStorage.getItem("admin") === "null" && <Navigate to="/login" />}
+      {localStorage.getItem("admin") === "undefined" && (
+        <Navigate to="/login" />
+      )}
       {isLoading && <Loading />}
       <div className={`${isLoading && "blur-sm"}`}>
         <div className="w-fit overflow-hidden rounded-md">

@@ -1,6 +1,6 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { Navigate, useParams } from "react-router-dom";
 import { FiEdit2 } from "react-icons/fi";
 import { useNavigate } from "react-router-dom";
 import Notification from "../Notification/Notification";
@@ -17,7 +17,7 @@ const EditEmployee = () => {
   const navigate = useNavigate();
   useEffect(() => {
     axios
-      .get(`http://localhost:3000/employee/${params.id}`)
+      .get(`${import.meta.env.VITE_APP_BASE}/employee/${params.id}`)
       .then((res) => {
         setIsLoading(true);
         setUser(res.data);
@@ -57,6 +57,11 @@ const EditEmployee = () => {
 
   return (
     <>
+      {(localStorage.getItem("admin") === "null" ||
+        localStorage.getItem("admin") === "undefined") && (
+        <Navigate to="/login" />
+      )}
+
       {isLoading && <Loading />}
       <div className={`${isLoading && "blur-md"}`}>
         <div className="p-8">

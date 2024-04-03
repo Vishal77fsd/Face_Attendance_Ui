@@ -8,6 +8,9 @@ import Employees from "./components/Employees.jsx";
 import Attendance from "./components/Attendance.jsx";
 import EditEmployee from "./components/EditEmployee.jsx";
 import Navbar from "./components/Navbar.jsx";
+import Login from "./components/Login.jsx";
+
+console.log(import.meta.env.VITE_APP_BASE);
 
 ReactDOM.createRoot(document.getElementById("root")).render(
   <React.StrictMode>
@@ -15,6 +18,7 @@ ReactDOM.createRoot(document.getElementById("root")).render(
       <Navbar />
       <Routes>
         <Route path="/" element={<App />} />
+        <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
         <Route path="/employees" element={<Employees />} />
         <Route path="/employees/:id" element={<EditEmployee />} />

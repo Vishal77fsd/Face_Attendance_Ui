@@ -3,6 +3,7 @@ import { useEffect, useRef, useState } from "react";
 import Webcam from "react-webcam";
 import Notification from "./Notification/Notification";
 import Loading from "./Notification/Loading";
+import { Navigate, useNavigate } from "react-router-dom";
 
 const Register = () => {
   const [empName, setEmpName] = useState("");
@@ -10,6 +11,14 @@ const Register = () => {
   const [isFieldEmpty, setIsFieldEmpty] = useState(false);
   const [cameraBlocked, setCameraBlocked] = useState(true);
   const [response, setResponse] = useState("");
+  const navigate = useNavigate();
+
+  if (localStorage.getItem("admin") === "undefined") {
+    return <Navigate to={"/employees/attendance"} />;
+  }
+  if (localStorage.getItem("admin") === "null") {
+    return <Navigate to={"/employees/attendance"} />;
+  }
 
   useEffect(() => {
     if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
@@ -46,7 +55,7 @@ const Register = () => {
       return;
     }
     axios
-      .post("http://localhost:3000/upload", {
+      .post(`${import.meta.env.VITE_APP_BASE}/upload`, {
         name: empName,
         img: webcamRef.current.getScreenshot(),
       })
@@ -77,36 +86,40 @@ const Register = () => {
 
   return (
     <>
-      {isLoading && <Loading />}
-      {isFieldEmpty && <Notification title="Please Enter Your Name!" />}
-      {cameraBlocked && <Notification title="Please Enable Camera First" />}
-      {response && <Notification title={response} />}
-      <div className={` flex justify-center items-center`}>
-        <div className="flex flex-col justify-center items-center w-full">
-          <div>
-            <Webcam
-              height={720}
-              ref={webcamRef}
-              screenshotFormat="image/jpeg"
-              width={720}
-              videoConstraints={videoConstraints}
-              className="rounded-md"
-            />
-          </div>
-          <div className="flex gap-10 m-8">
-            <input
-              type="text"
-              value={empName}
-              placeholder="Enter Employee Name"
-              onChange={(e) => setEmpName(e.target.value)}
-              className="rounded-md p-2"
-            />
-            <button onClick={registerUser} className="">
-              Register
-            </button>
+      {localStorage.getItem("admin") !== null && (
+        <div>
+          {isLoading && <Loading />}
+          {isFieldEmpty && <Notification title="Please Enter Your Name!" />}
+          {cameraBlocked && <Notification title="Please Enable Camera First" />}
+          {response && <Notification title={response} />}
+          <div className={` flex justify-center items-center`}>
+            <div className="flex flex-col justify-center items-center w-full">
+              <div>
+                <Webcam
+                  height={720}
+                  ref={webcamRef}
+                  screenshotFormat="image/jpeg"
+                  width={720}
+                  videoConstraints={videoConstraints}
+                  className="rounded-md"
+                />
+              </div>
+              <div className="flex gap-10 m-8">
+                <input
+                  type="text"
+                  value={empName}
+                  placeholder="Enter Employee Name"
+                  onChange={(e) => setEmpName(e.target.value)}
+                  className="rounded-md p-2"
+                />
+                <button onClick={registerUser} className="">
+                  Register
+                </button>
+              </div>
+            </div>
           </div>
         </div>
-      </div>
+      )}
     </>
   );
 };

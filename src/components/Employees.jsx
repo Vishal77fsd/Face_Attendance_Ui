@@ -1,6 +1,6 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { Navigate, useNavigate } from "react-router-dom";
 import Notification from "../Notification/Notification";
 import Loading from "../Notification/Loading";
 const Employees = () => {
@@ -12,7 +12,7 @@ const Employees = () => {
 
   useEffect(() => {
     axios
-      .get("http://localhost:3000/employees")
+      .get(`${import.meta.env.VITE_APP_BASE}/employees`)
       .then((result) => {
         setIsLoading(true);
         console.log(result.data);
@@ -55,50 +55,63 @@ const Employees = () => {
       })
       .catch((err) => console.log(err));
   };
-
+  console.log(localStorage.getItem("admin"));
   return (
     <>
-      {isLoading && <Loading />}
-      <div className={`${isLoading && "blur-md"}`}>
-        {isUserDeleted && <Notification title="User Deleted Successfully" />}
-        <div className="flex flex-wrap gap-10 justify-center items-center p-10">
-          {employees.map((employee, index) => {
-            return (
-              <div
-                className="h-64 w-64 p-2 rounded-md border-white  bg-[#353535]"
-                key={index}
-              >
-                <h3>
-                  {employee.firstname} {employee.middlename} {employee.lastname}
-                </h3>
-                <img
-                  src={`http://www.localhost:3000/${employee.img}`}
-                  alt="profile photo"
-                />
+      {localStorage.getItem("admin") === "null" && <Navigate to="/login" />}
+      {localStorage.getItem("admin") === "undefined" && (
+        <Navigate to="/login" />
+      )}
 
-                <div className="flex justify-between items-center p-4">
-                  <button
-                    onClick={() => {
-                      handleEdittable(employee._id);
-                    }}
-                  >
-                    Edit
-                  </button>
+      {localStorage.getItem("admin") !== "null" &&
+        localStorage.getItem("admin") !== "undefined" && (
+          <>
+            {isLoading && <Loading />}
+            <div className={`${isLoading && "blur-md"}`}>
+              {isUserDeleted && (
+                <Notification title="User Deleted Successfully" />
+              )}
+              <div className="flex flex-wrap gap-10 justify-center items-center p-10">
+                {employees.map((employee, index) => {
+                  return (
+                    <div
+                      className="h-64 w-64 p-2 rounded-md border-white  bg-[#353535]"
+                      key={index}
+                    >
+                      <h3>
+                        {employee.firstname} {employee.middlename}{" "}
+                        {employee.lastname}
+                      </h3>
+                      <img
+                        src={`http://www.localhost:3000/${employee.img}`}
+                        alt="profile photo"
+                      />
 
-                  <button
-                    className="bg-red-700"
-                    onClick={() => {
-                      handleDelete(employee.id);
-                    }}
-                  >
-                    Delete
-                  </button>
-                </div>
+                      <div className="flex justify-between items-center p-4">
+                        <button
+                          onClick={() => {
+                            handleEdittable(employee._id);
+                          }}
+                        >
+                          Edit
+                        </button>
+
+                        <button
+                          className="bg-red-700"
+                          onClick={() => {
+                            handleDelete(employee.id);
+                          }}
+                        >
+                          Delete
+                        </button>
+                      </div>
+                    </div>
+                  );
+                })}
               </div>
-            );
-          })}
-        </div>
-      </div>
+            </div>
+          </>
+        )}
     </>
   );
 };
